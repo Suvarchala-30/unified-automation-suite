@@ -58,8 +58,10 @@ do
 linew=$(sed -n "${x}p" temp.txt)
 echo "{\"user\":$linew," >>issue.txt
 echo "\"issues\":" >>issue.txt
-arr[x-1]=$(echo $response | jq "[.[] | select(.user.login==$linew) | .url] | length")
-echo $response | jq -r ".[] | select(.user.login==$linew) | .html_url" > url.txt
+# arr[x-1]=$(echo $response | jq "[.[] | select(.user.login==$linew) | .url] | length")
+arr[x-1]=$(echo $response | jq "[.[] | select(.user.login==$linew and .state==\"closed\") | .url] | length")
+echo $response | jq -r ".[] | select(.user.login==$linew and .state==\"closed\") | .html_url" > url.txt
+# echo $response | jq -r ".[] | select(.user.login==$linew) | .html_url" > url.txt
 sed -i 's/$/,/' url.txt
 txt=$(tr -d '\n' < url.txt)
 echo "{\"URL\":\"$txt\",\"testPayload\": true,\"keysLength\": 3}" >data1.json
